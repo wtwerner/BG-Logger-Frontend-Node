@@ -22,7 +22,7 @@ export const clearCurrentUser = () => {
 
 export const login = (credentials) => {
     return dispatch => {
-        return fetch(`${API_ROOT}/api/v1/login`, {
+        return fetch(`${API_ROOT}/users/login`, {
             credentials: 'include',
             method: "POST",
             headers: {
@@ -47,7 +47,7 @@ export const login = (credentials) => {
 
 export const logout = () => {
   return dispatch => {
-    return fetch(`${API_ROOT}/api/v1/logout`, {
+    return fetch(`${API_ROOT}/logout`, {
       credentials: 'include',
       method: 'DELETE'
     })
@@ -59,9 +59,9 @@ export const logout = () => {
 export const signup = (credentials) => {
   return dispatch => {
     const userInfo = {
-      user: credentials
+      ...credentials
     }
-    return fetch(`${API_ROOT}/api/v1/signup`, {
+    return fetch(`${API_ROOT}/users`, {
       credentials: "include",
       method: "POST",
       headers: {
@@ -71,6 +71,7 @@ export const signup = (credentials) => {
     })
       .then(r => r.json())
       .then(response => {
+        console.log(response)
         if (response.error) {
           alert(response.error)
         } else {
@@ -86,7 +87,7 @@ export const signup = (credentials) => {
 
 export const getCurrentUser = () => {
   return dispatch => {
-    return fetch(`${API_ROOT}/api/v1/get_current_user`, {
+    return fetch(`${API_ROOT}/users/me`, {
       credentials: 'include',
       method: "GET",
       headers: {
