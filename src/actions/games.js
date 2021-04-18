@@ -71,6 +71,7 @@ export const resetGames = () => {
 
 export const fetchGamesFromQuery = (query) => {
     return dispatch => {
+        console.log('fetching from query')
         return fetch(API_URL+'search?name='+query+CLIENT_ID+'&fuzzy_match=true')
             .then(response => response.json())
             .then(data => {

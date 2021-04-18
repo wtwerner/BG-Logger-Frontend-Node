@@ -35,6 +35,7 @@ export const login = (credentials) => {
             if (response.error) {
               alert(response.error)
             } else {
+              localStorage.setItem("token", response.token)
               dispatch(setCurrentUser(response))
               dispatch(fetchGamesFromUser(response))
               dispatch(fetchPlaysFromUser(response))
@@ -46,10 +47,15 @@ export const login = (credentials) => {
 }
 
 export const logout = () => {
+  const token = localStorage.token;
+  localStorage.removeItem("token")
   return dispatch => {
-    return fetch(`${API_ROOT}/logout`, {
+    return fetch(`${API_ROOT}/users/logout`, {
       credentials: 'include',
-      method: 'DELETE'
+      method: 'POST',
+      headers: {
+        "Authorization": `Bearer ${token}`
+      }
     })
       .then(dispatch(clearCurrentUser()))
       .then(dispatch(resetGames()))
@@ -75,7 +81,8 @@ export const signup = (credentials) => {
         if (response.error) {
           alert(response.error)
         } else {
-          dispatch(setCurrentUser(response))
+          localStorage.setItem("token", response.token)
+          dispatch(setCurrentUser(response.user))
           dispatch(fetchGamesFromUser(response))
           dispatch(fetchPlaysFromUser(response))
           dispatch(fetchGamesFromQuery(''))
@@ -86,12 +93,14 @@ export const signup = (credentials) => {
 }
 
 export const getCurrentUser = () => {
+  const token = localStorage.token;
   return dispatch => {
     return fetch(`${API_ROOT}/users/me`, {
       credentials: 'include',
       method: "GET",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
       },
     })
       .then(r => r.json())
@@ -99,10 +108,11 @@ export const getCurrentUser = () => {
         if (response.error) {
           console.log(response.error)
         } else {
+          console.log(response)
           dispatch(setCurrentUser(response))
+          dispatch(fetchGamesFromQuery(''))
           dispatch(fetchGamesFromUser(response))
           dispatch(fetchPlaysFromUser(response))
-          dispatch(fetchGamesFromQuery(''))
         }
       })
       .catch(console.log)
