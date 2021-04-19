@@ -35,7 +35,6 @@ export const login = (credentials) => {
             if (response.error) {
               alert(response.error)
             } else {
-              localStorage.setItem("token", response.token)
               dispatch(setCurrentUser(response))
               dispatch(fetchGamesFromUser(response))
               dispatch(fetchPlaysFromUser(response))
@@ -47,15 +46,10 @@ export const login = (credentials) => {
 }
 
 export const logout = () => {
-  const token = localStorage.token;
-  localStorage.removeItem("token")
   return dispatch => {
     return fetch(`${API_ROOT}/users/logout`, {
       credentials: 'include',
-      method: 'POST',
-      headers: {
-        "Authorization": `Bearer ${token}`
-      }
+      method: 'POST'
     })
       .then(dispatch(clearCurrentUser()))
       .then(dispatch(resetGames()))
@@ -81,8 +75,7 @@ export const signup = (credentials) => {
         if (response.error) {
           alert(response.error)
         } else {
-          localStorage.setItem("token", response.token)
-          dispatch(setCurrentUser(response.user))
+          dispatch(setCurrentUser(response))
           dispatch(fetchGamesFromUser(response))
           dispatch(fetchPlaysFromUser(response))
           dispatch(fetchGamesFromQuery(''))
@@ -93,14 +86,12 @@ export const signup = (credentials) => {
 }
 
 export const getCurrentUser = () => {
-  const token = localStorage.token;
   return dispatch => {
     return fetch(`${API_ROOT}/users/me`, {
       credentials: 'include',
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
       },
     })
       .then(r => r.json())
