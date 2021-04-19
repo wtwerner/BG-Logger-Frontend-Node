@@ -71,7 +71,6 @@ export const resetGames = () => {
 
 export const fetchGamesFromQuery = (query) => {
     return dispatch => {
-        console.log('fetching from query')
         return fetch(API_URL+'search?name='+query+CLIENT_ID+'&fuzzy_match=true')
             .then(response => response.json())
             .then(data => {
@@ -90,17 +89,17 @@ export const fetchGamesFromUser = (user) => {
         let wishlistIdsString = ''
         let recentIdsString = ''
 
-        user.data.attributes.games.forEach(game => {
+        user.games.forEach(game => {
             if (game.owned) {
-                ownedIdsString += `${game.bga_id},`
+                ownedIdsString += `${game.bgaId},`
             } else if (game.wishlist) {
-                wishlistIdsString += `${game.bga_id},`
+                wishlistIdsString += `${game.bgaId},`
             }
         })
 
-        const recents = user.data.attributes.games.filter(game => game.owned === true).slice(-3)
+        const recents = user.games.filter(game => game.owned === true).slice(-3)
         recents.forEach(game => {
-            recentIdsString += `${game.bga_id},`
+            recentIdsString += `${game.bgaId},`
         })
 
         if (ownedIdsString !== '') {
@@ -137,11 +136,12 @@ export const createWishlistGame = (game) => {
     return dispatch => {
         console.log("Creating wishlist game with id " + game.id)
         const sendableGameData = {
-            bga_id: game.id,
+            name: game.name,
+            bgaId: game.id,
             wishlist: true,
             owned: false
         }
-        return fetch(`${API_ROOT}/api/v1/games`, {
+        return fetch(`${API_ROOT}/games`, {
             credentials: "include",
             method: "POST",
             headers: {
@@ -165,11 +165,12 @@ export const createOwnedGame = (game) => {
     return dispatch => {
         console.log("Creating owned game with id " + game.id)
         const sendableGameData = {
-            bga_id: game.id,
+            name: game.name,
+            bgaId: game.id,
             wishlist: false,
             owned: true
         }
-        return fetch(`${API_ROOT}/api/v1/games`, {
+        return fetch(`${API_ROOT}/games`, {
             credentials: "include",
             method: "POST",
             headers: {
@@ -196,9 +197,9 @@ export const removeWishlistGame = (game) => {
     return dispatch => {
         console.log("Removing wishlist game with id " + game.id)
         const sendableGameData = {
-            bga_id: game.id
+            bgaId: game.id
         }
-        return fetch(`${API_ROOT}/api/v1/games/${game.id}`, {
+        return fetch(`${API_ROOT}/games/${game.id}`, {
             credentials: "include",
             method: "DELETE",
             headers: {
@@ -211,7 +212,7 @@ export const removeWishlistGame = (game) => {
             if (resp.error) {
                 alert(resp.error)
             } else {
-                dispatch(deleteWishlistGame(resp.bga_id))
+                dispatch(deleteWishlistGame(resp.bgaId))
             }
             })
             .catch(console.log)
@@ -222,9 +223,9 @@ export const removeOwnedGame = (game) => {
     return dispatch => {
         console.log("Removing owned game with id " + game.id)
         const sendableGameData = {
-            bga_id: game.id
+            bgaId: game.id
         }
-        return fetch(`${API_ROOT}/api/v1/games/${game.id}`, {
+        return fetch(`${API_ROOT}/games/${game.id}`, {
             credentials: "include",
             method: "DELETE",
             headers: {
@@ -251,7 +252,7 @@ export const moveToOwned = (game) => {
             owned: true,
             wishlist: false
         }
-        return fetch(`${API_ROOT}/api/v1/games/${game.id}`, {
+        return fetch(`${API_ROOT}/games/${game.id}`, {
             credentials: "include",
             method: "PATCH",
             headers: {

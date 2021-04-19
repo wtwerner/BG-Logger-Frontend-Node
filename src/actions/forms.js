@@ -132,7 +132,7 @@ export const removePlay = (play) => {
 
 export const fetchPlaysFromUser = (user) => {
     return dispatch => {
-        dispatch(addPlays(user.data.attributes.plays))
+        dispatch(addPlays(user.plays))
     }
 }
 

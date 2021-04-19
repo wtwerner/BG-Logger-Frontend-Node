@@ -1,5 +1,5 @@
 import { fetchGamesFromQuery, fetchGamesFromUser } from './games'
-import { fetchPlaysFromUser } from './forms'
+// import { fetchPlaysFromUser } from './forms'
 import { resetGames } from './games'
 import { API_ROOT } from '../apiRoot'
 
@@ -36,9 +36,9 @@ export const login = (credentials) => {
               alert(response.error)
             } else {
               dispatch(setCurrentUser(response))
-              dispatch(fetchGamesFromUser(response))
-              dispatch(fetchPlaysFromUser(response))
               dispatch(fetchGamesFromQuery(''))
+              dispatch(fetchGamesFromUser(response))
+              // dispatch(fetchPlaysFromUser(response))
             }
         })
           .catch(console.log)
@@ -71,13 +71,12 @@ export const signup = (credentials) => {
     })
       .then(r => r.json())
       .then(response => {
-        console.log(response)
         if (response.error) {
           alert(response.error)
         } else {
           dispatch(setCurrentUser(response))
           dispatch(fetchGamesFromUser(response))
-          dispatch(fetchPlaysFromUser(response))
+          // dispatch(fetchPlaysFromUser(response))
           dispatch(fetchGamesFromQuery(''))
         }
       })
@@ -99,11 +98,10 @@ export const getCurrentUser = () => {
         if (response.error) {
           console.log(response.error)
         } else {
-          console.log(response)
           dispatch(setCurrentUser(response))
           dispatch(fetchGamesFromQuery(''))
           dispatch(fetchGamesFromUser(response))
-          dispatch(fetchPlaysFromUser(response))
+          // dispatch(fetchPlaysFromUser(response))
         }
       })
       .catch(console.log)

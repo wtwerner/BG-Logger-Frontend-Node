@@ -40,7 +40,7 @@ const games = (state = initialState, action) => {
         case 'DELETE_OWNED_GAME':
             return {
                 ...state,
-                owned: state.owned.filter(game => game.id !== action.game.bga_id)
+                owned: state.owned.filter(game => game.id !== action.game.bgaId)
             }
         case 'SEARCH_API_GAMES':
             return {
