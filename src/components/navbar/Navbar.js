@@ -1,30 +1,32 @@
 import React from 'react'
-import { Navbar, Nav, NavDropdown, Form, Button, ButtonGroup } from 'react-bootstrap'
+import { Navbar, Nav, NavDropdown, Form, ButtonGroup } from 'react-bootstrap'
 import { logout } from "../../actions/currentUser.js"
 import { connect } from 'react-redux'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import { useAuth0 } from "@auth0/auth0-react";
+import LoginButton from '../buttons/LoginButton'
+import LogoutButton from '../buttons/LogoutButton'
 
-const GlobalNavbar = ({ logout, currentUser }) => {
+const GlobalNavbar = () => {
 
-    const history = useHistory()
-
-    const handleLogoutClick = () => {
-        logout()
-        history.push('/')
-    }
-
+    const { isAuthenticated } = useAuth0()
+    
     const authButton = () => {
-        if (currentUser === null) {
+
+        if (isAuthenticated) {
             return (
                 <ButtonGroup>
-                    <Button variant="secondary" as={Link} to="/login">Login</Button>
-                    <Button variant="secondary" as={Link} to="/signup">Signup</Button>
+                    <LogoutButton />
                 </ButtonGroup>
             )
-                
-        } else {
-            return <Button variant="secondary" onClick={handleLogoutClick}>Logout</Button>
         }
+
+        return (
+            <ButtonGroup>
+                <LoginButton />
+            </ButtonGroup>
+        )
+        
     }
 
     return (
